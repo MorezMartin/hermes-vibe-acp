@@ -1,0 +1,16 @@
+# Gate de review M3 — hooks globaux Vibe 3.1.4 (installés dans $VIBE_HOME/hooks.toml).
+# Schéma exact (vibe/core/hooks/models.py HookConfig) : name, type, command, match,
+# timeout, description. PIÈGE VÉRIFIÉ : strict=true n'EST PAS permis sur post_agent
+# (STRICT_HOOK_TYPES = pre_tool/post_tool/pre_agent/pre_llm/post_llm uniquement) —
+# un hook post_agent avec strict=true est INVALIDÉ par le loader et ignoré.
+# Le fail-closed est donc porté par le script lui-même (cf. revgate-hook.py).
+# match="main" = l'agent principal (alias réservé ; ne sélectionne PAS les subagents,
+# d'où un reviewer qui ne peut pas être bloqué par sa propre gate).
+# __VIBE_HOME__ est remplacé par scripts/install-vibe-config.sh à l'installation.
+[[hooks]]
+name = "revgate"
+type = "post_agent"
+match = "main"
+command = "python3 __VIBE_HOME__/hooks/revgate-hook.py"
+timeout = 20
+description = "Bloque la conclusion tant que /tmp/revgate/review-verdict.json n'est pas frais et complet ; escape-hatch VIBE_FAST=1."

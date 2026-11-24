@@ -1,0 +1,14 @@
+.cache/
+__pycache__/
+*.pyc
+
+.env
+.env.*
+*.env
+.key
+
+# logs bruts ACP des scenarios M3 (preuves locales, non versionnées)
+tests/frames-m3-*.jsonl
+
+# recherche interne (non publiée)
+references/

@@ -1,0 +1,5 @@
+name: vibe-acp
+kind: model-provider
+version: 0.2.0
+description: Mistral Vibe CLI comme modèle de code via ACP (external_process, stdio JSON-RPC) — pont outillage, approvals, picker
+author: hermes-vibe-acp

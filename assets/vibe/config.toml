@@ -1,0 +1,42 @@
+# Config vibe pour hermes-vibe-acp — template (M3).
+# Installé par scripts/install-vibe-config.sh dans $VIBE_HOME ; les placeholders
+# __VIBE_ACP_MODEL__ (modèle économique, défaut) et __VIBE_REVIEW_MODEL__ (second
+# modèle, ex. reviewer) sont remplacés depuis l'environnement — aucun id de modèle
+# n'est en dur dans le repo.
+# Champs vérifiés contre vibe/core/config/vibe_schema.py (mistral-vibe 3.1.4) :
+# enable_telemetry, active_model, default_agent, default_approval_policy,
+# [[providers]] (name/api_base/api_key_env_var), [[models]] (name/provider/alias/display_name).
+enable_telemetry = false
+
+# Fournisseur Mistral (api.mistral.ai, clé via MISTRAL_API_KEY). Il existe déjà
+# dans DEFAULT_PROVIDERS ; re-déclaré explicitement — [[providers]] fusionne par
+# merge_key="name", donc l'installation est idempotente.
+[[providers]]
+name = "mistral"
+api_base = "https://api.mistral.ai/v1"
+api_key_env_var = "MISTRAL_API_KEY"
+
+# Modèle économique = défaut de session (protège les crédits si le client
+# n'applique pas configOptions).
+[[models]]
+name = "__VIBE_ACP_MODEL__"
+alias = "__VIBE_ACP_MODEL__"
+provider = "mistral"
+display_name = "Modèle économique (défaut)"
+
+# Second modèle exposé au picker (utilisé par le reviewer).
+[[models]]
+name = "__VIBE_REVIEW_MODEL__"
+alias = "__VIBE_REVIEW_MODEL__"
+provider = "mistral"
+display_name = "Modèle reviewer"
+
+active_model = "__VIBE_ACP_MODEL__"
+
+# Agent builder = agent principal par défaut (agents/builder.toml, $VIBE_HOME/agents).
+default_agent = "builder"
+
+# Headless ACP : pas d'humain pour les demandes d'approbation ; le contrôle vient
+# du gate reviewer (hooks.toml), pas des prompts d'approval.
+# Valeurs valides : ask | accept-edits | smart-approve | auto-approve.
+default_approval_policy = "auto-approve"
